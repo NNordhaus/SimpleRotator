@@ -10,7 +10,7 @@ namespace SimpleRotator.Controllers
     {
         public ActionResult Index()
         {
-            return Content("There is nothing here.");
+            return View();
         }
     }
 }
