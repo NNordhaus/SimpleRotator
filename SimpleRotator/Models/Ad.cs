@@ -4,39 +4,36 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Query.Dynamic;
 
 namespace SimpleRotator
 {
     public class Ad
     {
-        public Ad(string file)
+        public Ad(string fileContent)
         {
-            // File Format:
-            // {startdate(yyyymmdd hh:mm)}_{endDate}_{rotation}.html
+            // Split the file into lines
+            var fileLines = fileContent.Split('\n');
 
-            var fName = new FileInfo(file).Name;
+            // Trim all lines, remove any comment lines
+            var lines = fileLines.Select(l => l.Trim()).Where(l => l.Substring(0, 2) != "//").ToArray();
 
-            // strip file extension
-            fName = fName.Replace(".html", string.Empty);
-
-            var parts = fName.Split('_');
-
-            if (parts.Length < 3)
+            if (lines.Length < 4)
             {
-                throw new FormatException("Filename in incorrect format");
+                throw new FormatException("Input file must have at least 4 lines");
             }
 
-            int rotation;
-            if (!int.TryParse(parts[2], out rotation))
-            {
-                throw new FormatException("Unable to parse rotation portion of filename");
-            }
-            Rotation = rotation;
-          
-            StartDate = ParseDate(parts[0], "start date");
-            EndDate = ParseDate(parts[1], "end date");
+            // First line is the start date
+            StartDate = ParseDate(lines[0], "StartDate");
 
-            Html = File.ReadAllText(file);
+            // Second line is the start date
+            EndDate = ParseDate(lines[1], "EndDate");
+
+            // Third line is rotation
+            Rotation = int.Parse(lines[2]);
+
+            // Fourth line, and any subsequent lines, is the html
+            Html = string.Join("\n", lines.Skip(3));
         }
 
         public string Html { get; set; }
@@ -48,12 +45,12 @@ namespace SimpleRotator
 
         private DateTime ParseDate(string txt, string paramName)
         {
-            DateTime start;
-            if (!DateTime.TryParseExact(txt, "yyyyMMdd hhmm", enUS, DateTimeStyles.AssumeLocal,  out start))
+            DateTime dt;
+            if (!DateTime.TryParse(txt,  out dt))
             {
-                throw new FormatException("Unable to parse " + paramName + " portion of filename");
+                throw new ArgumentException("Unable to parse " + paramName + " portion of file");
             }
-            return start;
+            return dt;
         }
     }
 }

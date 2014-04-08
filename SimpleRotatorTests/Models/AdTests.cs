@@ -2,7 +2,6 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleRotator;
-using SimpleRotatorTests.TestTools;
 
 namespace SimpleRotatorTests.Models
 {
@@ -11,68 +10,149 @@ namespace SimpleRotatorTests.Models
     {
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void Constructor_Should_Throw_Error_If_File_Name_Missing_Underscores()
+        public void Constructor_Should_Throw_Error_If_File_Content_Doesnt_Have_Minimum_4_Non_Comment_Lines()
         {
-            var sut = new Ad("20140101 0000_20150101 0000-10");
+            var sut = new Ad(
+            @"//
+            blah
+            //
+            blah
+            //
+            blah
+            //");
+
+            sut.StartDate = DateTime.Now;
+        }
+
+        [TestMethod]
+        public void Constructor_Should_Parse_StartDate()
+        {
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah");
+
+            Assert.AreEqual(new DateTime(2015,10,21,16,0,0), sut.StartDate);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Constructor_Should_Fail_On_Unparseable_StartDate()
+        {
+            var sut = new Ad(
+                @"//Start Date
+                donald duck
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah");
+
+            Assert.AreEqual(new DateTime(2015, 10, 21, 16, 0, 0), sut.StartDate);
+        }
+
+        [TestMethod]
+        public void Constructor_Should_Parse_EndDate()
+        {
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah");
+
+            Assert.AreEqual(new DateTime(2099, 12, 31, 8, 15, 0), sut.EndDate);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Constructor_Should_Fail_On_Unparseable_EndDate()
+        {
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                mickey mouse
+                // Rotation
+                20
+                // Html
+                <p>blah");
+
+            Assert.AreEqual(new DateTime(2015, 10, 21, 16, 0, 0), sut.StartDate);
         }
 
         [TestMethod]
         public void Constructor_Should_Parse_Rotation()
         {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_10.html", "html goes here");
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah");
 
-            var sut = new Ad(tmpFile);
-
-            Assert.AreEqual(10, sut.Rotation);
-        }
-
-        [TestMethod]
-        public void Constructor_Should_Parse_Rotation_2()
-        {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_2.html", "html goes here");
-
-            var sut = new Ad(tmpFile);
-
-            Assert.AreEqual(2, sut.Rotation);
+            Assert.AreEqual(20, sut.Rotation);
         }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
         public void Constructor_Should_Throw_Exception_if_bad_Rotation()
         {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_blah.html", "html goes here");
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                minnie mouse
+                // Html
+                <p>blah");
+        }
 
-            var sut = new Ad(tmpFile);
+
+        [TestMethod]
+        public void Constructor_Should_Read_Remaining_File_Contents_into_HTML()
+        {
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah");
+
+            Assert.AreEqual("<p>blah", sut.Html);
         }
 
         [TestMethod]
-        public void Constructor_Should_Parse_Start_Date()
+        public void Constructor_Should_Read_Remaining_Multiline_File_Contents_into_HTML()
         {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_10.html", "html goes here");
+            var sut = new Ad(
+                @"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                20
+                // Html
+                <p>blah
+more html");
 
-            var sut = new Ad(tmpFile);
-
-            Assert.AreEqual(new DateTime(2014, 1, 1), sut.StartDate);
-        }
-
-        [TestMethod]
-        public void Constructor_Should_Parse_End_Date()
-        {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_10.html", "html goes here");
-
-            var sut = new Ad(tmpFile);
-
-            Assert.AreEqual(new DateTime(2015, 1, 1), sut.EndDate);
-        }
-
-        [TestMethod]
-        public void Constructor_Should_Read_File_Contents_into_HTML()
-        {
-            var tmpFile = DiskIO.WriteTextFileToTempFolder("20140101 0000_20150101 0000_15.html", "html goes here");
-
-            var sut = new Ad(tmpFile);
-
-            Assert.AreEqual("html goes here", sut.Html);
+            Assert.AreEqual("<p>blah\nmore html", sut.Html);
         }
 
     }
