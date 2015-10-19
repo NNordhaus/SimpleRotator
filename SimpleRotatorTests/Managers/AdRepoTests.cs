@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SimpleRotator.Managers;
+using SimpleRotatorTests.Models;
 using SimpleRotatorTests.TestTools;
 
 namespace SimpleRotatorTests.Managers
@@ -17,15 +18,25 @@ namespace SimpleRotatorTests.Managers
         [TestMethod]
         public void AdRepo_Should_Load_Zones_From_Directories()
         {
-            var tmpDir = DiskIO.GetTempFolder();
+            var io = new ZoneTest.TestIO();
 
-            // create folders in that folder
-            Directory.CreateDirectory(Path.Combine(tmpDir, "Apples"));
-            Directory.CreateDirectory(Path.Combine(tmpDir, "Oranges"));
+            var list = new List<string>()
+                {
+                    "file1",
+                    "file2"
+                };
 
-            var sut = new AdRepo(tmpDir);
+            var leader = new ZoneTest.DummyDirectory("leader");
+            var box = new ZoneTest.DummyDirectory("box");
+            var sky = new ZoneTest.DummyDirectory("sky");
 
-            Assert.AreEqual(2, sut.Zones.Count());
+            io.DummyDirectories.Add("leader", leader);
+            io.DummyDirectories.Add("box", box);
+            io.DummyDirectories.Add("sky", sky);
+
+            var sut = new AdRepo(io, "root");
+
+            Assert.AreEqual(3, sut.Zones.Count());
         }
     }
 }

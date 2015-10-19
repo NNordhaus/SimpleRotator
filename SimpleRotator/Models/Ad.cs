@@ -6,27 +6,37 @@ using System.Linq;
 using System.Web;
 using System.Web.Query.Dynamic;
 
-namespace SimpleRotator
+using SimpleRotator.Tools;
+
+namespace SimpleRotator.Models
 {
-    public class Ad
+    public interface IAd
+    {
+        string Html { get; set; }
+        int Rotation { get; set; }
+        System.DateTime StartDate { get; set; }
+        System.DateTime EndDate { get; set; }
+    }
+
+    public class Ad : IAd
     {
         public Ad(string fileContent)
         {
             // Split the file into lines
             var fileLines = fileContent.Split('\n');
 
-            // Trim all lines, remove any comment lines
-            var lines = fileLines.Select(l => l.Trim()).Where(l => l.Substring(0, 2) != "//").ToArray();
+            // Trim all lines, remove any comment lines TODO: handle lines less than 2 chars long
+            var lines = fileLines.Select(l => l.Trim()).Where(l => l.Length > 0 && l.Left(2) != "//").ToArray();
 
             if (lines.Length < 4)
             {
-                throw new FormatException("Input file must have at least 4 lines");
+                throw new FormatException("Input file must have at least 4 non-comment lines");
             }
 
             // First line is the start date
             StartDate = ParseDate(lines[0], "StartDate");
 
-            // Second line is the start date
+            // Second line is the end date
             EndDate = ParseDate(lines[1], "EndDate");
 
             // Third line is rotation
@@ -38,19 +48,36 @@ namespace SimpleRotator
 
         public string Html { get; set; }
         public int Rotation { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
 
         CultureInfo enUS = new CultureInfo("en-US");
 
-        private DateTime ParseDate(string txt, string paramName)
+        private System.DateTime ParseDate(string txt, string paramName)
         {
-            DateTime dt;
-            if (!DateTime.TryParse(txt,  out dt))
+            System.DateTime dt;
+            if (!System.DateTime.TryParse(txt,  out dt))
             {
                 throw new ArgumentException("Unable to parse " + paramName + " portion of file");
             }
             return dt;
         }
     }
+
+    //public class DummyAd : IAd
+    //{
+    //    public DummyAd(string fileContent)
+    //    {
+    //        // Dummy Data
+    //        StartDate = DateTime.MinValue;
+    //        EndDate = DateTime.MaxValue;
+    //        Rotation = 50;
+    //        Html = "html here";
+    //    }
+    //
+    //    public string Html { get; set; }
+    //    public int Rotation { get; set; }
+    //    public DateTime StartDate { get; set; }
+    //    public DateTime EndDate { get; set; }
+    //}
 }

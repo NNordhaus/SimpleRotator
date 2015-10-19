@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using SimpleRotator.Tools;
 
 namespace SimpleRotator.Models
 {
     public class Zone
     {
         public string Name { get; set; }
-        public IList<Ad> Ads { get; set; }
+        public IList<IAd> Ads { get; set; }
 
-        public Zone(string dir)
+        public Zone(FileIO io, string directory)
         {
-            Name = new DirectoryInfo(dir).Name;
+            Name = io.GetFolderName(directory);
 
-            var files = Directory.GetFiles(dir, "*.html");
+            var files = io.GetFiles(directory);
 
-            Ads = new List<Ad>(files.Count());
+            Ads = new List<IAd>(files.Count());
             foreach (var file in files)
             {
-                Ads.Add(new Ad(file));
+                Ads.Add(new Ad(io.ReadAllText(directory, file)));
             }
         }
     }

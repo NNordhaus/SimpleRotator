@@ -4,31 +4,33 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using SimpleRotator.Models;
+using SimpleRotator.Tools;
 
 namespace SimpleRotator.Managers
 {
     public class AdRepo
     {
-        public AdRepo(string directory)
+        public AdRepo(FileIO io, string directory)
         {
             rootDir = directory;
-            LoadZones(true);
+            LoadZones(io, true);
         }
 
         private string rootDir;
 
         public IList<Zone> Zones;
 
-        private void LoadZones(bool forceRefresh)
+        private void LoadZones(FileIO io, bool forceRefresh)
         {
             if (forceRefresh || Zones == null)
             {
-                var dirs = Directory.GetDirectories(rootDir);
-                Zones = new List<Zone>(dirs.Count());
+                var zoneDirs = io.GetDirs(rootDir);
 
-                foreach (string dir in dirs)
+                Zones = new List<Zone>(zoneDirs.Count());
+
+                foreach (string dir in zoneDirs)
                 {
-                    Zones.Add(new Zone(dir));
+                    Zones.Add(new Zone(io, dir));
                 }
             }
         }

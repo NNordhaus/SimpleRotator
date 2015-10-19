@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleRotator;
+
+using SimpleRotator.Models;
 
 namespace SimpleRotatorTests.Models
 {
@@ -141,8 +142,7 @@ namespace SimpleRotatorTests.Models
         [TestMethod]
         public void Constructor_Should_Read_Remaining_Multiline_File_Contents_into_HTML()
         {
-            var sut = new Ad(
-                @"//Start Date
+            var sut = new Ad(@"//Start Date
                 2015-10-21 16:00
                 // End Date
                 2099-12-31 08:15
@@ -150,10 +150,26 @@ namespace SimpleRotatorTests.Models
                 20
                 // Html
                 <p>blah
-more html");
+                more html");
 
             Assert.AreEqual("<p>blah\nmore html", sut.Html);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Constructor_Should_Fail_On_1_Char_Line()
+        {
+            var sut = new Ad(@"//Start Date
+                2015-10-21 16:00
+                // End Date
+                2099-12-31 08:15
+                // Rotation
+                2
+                // Html
+                <p>blah
+                more html");
+
+            Assert.AreEqual("<p>blah\nmore html", sut.Html);
+        }
     }
 }

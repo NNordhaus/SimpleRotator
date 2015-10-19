@@ -129,14 +129,26 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Managers\Factory.cs" />
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Managers\AdSelector.cs" />
     <Compile Include="Managers\AdRepo.cs" />
+    <Compile Include="Models\ErrorAd.cs" />
     <Compile Include="Models\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\DateTime.cs" />
+    <Compile Include="Tools\IO.cs" />
+    <Compile Include="Tools\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\160x600.png" />
+    <Content Include="Content\300x250.png" />
+    <Content Include="Content\336x280.png" />
+    <Content Include="Content\728x90.png" />
+    <Content Include="Content\Template.txt" />
     <Content Include="Global.asax" />
+    <Content Include="Test.html" />
+    <Content Include="ToDo.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -157,6 +169,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\Desktop.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

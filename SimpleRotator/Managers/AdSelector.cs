@@ -4,26 +4,54 @@ using System.Linq;
 using System.Web;
 
 using SimpleRotator.Models;
+using SimpleRotator.Tools;
 
 namespace SimpleRotator.Managers
 {
     public class AdSelector
     {
-        private static Random r = new Random(DateTime.UtcNow.Millisecond * 1999993);
+        private static Random r = new Random(System.DateTime.UtcNow.Millisecond * 1999993);
 
-        public static string GetAd(string zone)
+        public static IAd GetAd(AdRepo repo, iDateTime dateTime, string zoneName)
         {
-            // Get all ads in the given zone
+            // Get the given zone
+            var zone = repo.Zones.FirstOrDefault(z => z.Name.ToLower() == zoneName.ToLower());
 
-            // Exclude any that are before the start date
+            if (zone == null)
+            {
+                throw new Exception("Zone not found");
+            }
 
-            // Exclude any that are past the end date
+            // Get all ads that have a time span covering now
+            var now = dateTime.Now();
+            var ads = zone.Ads.Where(a => a.StartDate < now && a.EndDate > now).ToList();
 
             // Get the sum of all rotation values
+            var sum = ads.Sum(a => a.Rotation);
 
             // Select one at random, weighted by rotation
+            var randomSelector = r.Next(0, sum);
+            var counter = 0;
 
-            return "No Ad found in that Zone";
+            while (randomSelector > -1)
+            {
+                if (ads[counter].Rotation > randomSelector)
+                {
+                    return ads[counter];
+                }
+                randomSelector -= ads[counter].Rotation;
+                counter++;
+            }
+
+            throw new Exception("this should never happen, probably an off by 1 error. r = " + randomSelector);
+        }
+
+        public static string GetAdAsScript(AdRepo repo, iDateTime dateTime, string zoneName)
+        {
+            var output = GetAd(repo, dateTime, zoneName).Html;
+            output = output.Replace("'", "\\'").Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
+
+            return "document.write('" + output + "');";
         }
     }
 }

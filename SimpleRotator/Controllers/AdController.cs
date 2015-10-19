@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleRotator.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,12 @@ namespace SimpleRotator.Controllers
     {
         public ActionResult GetAd(string zone)
         {
-            return Content("you requested zone '" + zone + "'");
+            return Content(AdSelector.GetAdAsScript(Factory.GetRepo(), Factory.GetDateTime(), zone));
+        }
+
+        public ActionResult ShowSchedule()
+        {
+            return View();
         }
     }
 }

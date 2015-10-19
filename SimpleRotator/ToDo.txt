@@ -1,0 +1,5 @@
+﻿
+Target Functionality
+- Can set campaigns up ahead of time with specified start times
+- Campaigns stop on specified end time
+- Can have "priority" campaigns that 
