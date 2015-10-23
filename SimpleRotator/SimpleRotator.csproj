@@ -173,7 +173,7 @@
     <None Include="Properties\PublishProfiles\Desktop.pubxml" />
     <Content Include="Views\Preview\Index.cshtml" />
     <Content Include="Views\Ad\GetClientScript.cshtml" />
-    <Content Include="README.md" />
+    <Content Include="..\README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
