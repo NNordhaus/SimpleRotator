@@ -26,6 +26,12 @@ namespace SimpleRotator.Managers
             var now = dateTime.Now();
             var ads = zone.Ads.Where(a => a.StartDate < now && a.EndDate > now).ToList();
 
+            //if (ads.Count == 0)
+            //{
+            //    // return Error ad, or blank ad
+            //    return new DummyAd(
+            //}
+
             // Get the sum of all rotation values
             var sum = ads.Sum(a => a.Rotation);
 
