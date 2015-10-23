@@ -124,8 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdController.cs" />
-    <Compile Include="Controllers\DevController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PreviewController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -147,8 +147,6 @@
     <Content Include="Content\728x90.png" />
     <Content Include="Content\Template.txt" />
     <Content Include="Global.asax" />
-    <Content Include="Test.html" />
-    <Content Include="ToDo.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -164,8 +162,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Media\" />
-    <Folder Include="Tools\" />
-    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -175,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Desktop.pubxml" />
+    <Content Include="Views\Preview\Index.cshtml" />
+    <Content Include="Views\Ad\GetClientScript.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -14,6 +14,11 @@ namespace SimpleRotator.Controllers
             return Content(AdSelector.GetAdAsScript(Factory.GetRepo(), Factory.GetDateTime(), zone));
         }
 
+        public ActionResult GetClientScript(string zone)
+        {
+            return View((object)zone);
+        }
+
         public ActionResult ShowSchedule()
         {
             return View();

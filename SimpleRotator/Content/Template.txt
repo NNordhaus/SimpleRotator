@@ -1,0 +1,8 @@
+//Start Date
+2014-01-01 00:00
+//End Date
+2015-01-01
+//Rotation
+50
+//HTML
+<a href="http://bing.com"><img src="/Content/728x90.png" alt="Bing Search Engine"/></a>

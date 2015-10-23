@@ -1,0 +1,10 @@
+﻿@model string
+@{
+    string url = Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("GetAd", "Ad", new { zone = Model });
+}
+<!-- BEGIN Ad CODE -->
+<script type="text/javascript">
+    ts = String.fromCharCode(60);
+    document.write(ts + 'script src="@Html.Raw(url)?r=' + Math.random() + '">' + ts + '/script>');
+</script>
+<!-- END Ad CODE -->

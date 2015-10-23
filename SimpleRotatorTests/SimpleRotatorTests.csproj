@@ -55,6 +55,7 @@
     <Compile Include="Models\AdTests.cs" />
     <Compile Include="Models\ZoneTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTools\DateTime.cs" />
     <Compile Include="TestTools\DiskIO.cs" />
   </ItemGroup>
   <ItemGroup>

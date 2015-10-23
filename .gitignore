@@ -179,3 +179,4 @@ $RECYCLE.BIN/
 #System.IO.Abstractions specific ignores
 Releases
 System.IO.Abstractions.*.nupkg
+*.jmconfig

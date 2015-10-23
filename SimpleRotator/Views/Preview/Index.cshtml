@@ -1,0 +1,18 @@
+﻿@using SimpleRotator.Models
+@model IEnumerable<Zone>
+
+@{
+    ViewBag.Title = "Preview";
+}
+
+<h2>Preview Ad Codes and ads</h2>
+
+@foreach (Zone z in Model)
+{
+    string script = Html.Partial("~/Views/Ad/GetClientScript.cshtml", (object)z.Name).ToString();
+    <div>
+        <h2>@z.Name</h2><br />
+        <textarea rows="6" cols="120">@script</textarea><br />
+        @Html.Raw(script)
+    </div>
+}
