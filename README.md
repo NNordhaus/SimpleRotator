@@ -18,4 +18,4 @@ A few things to note:
 * The rotation number must be an integer greater than zero.  All the rotations in a zone do not have to add up to any numerber, they are not percentages.  All rotations within a zone will be added together, then a randome number within that sum will be selected.
 
 
-## Any feedback is appreciated, I will consider all pull requests! ##
+### Any feedback is appreciated, I will consider all pull requests! ###
